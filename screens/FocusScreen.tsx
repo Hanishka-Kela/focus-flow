@@ -12,13 +12,6 @@ import {
   Alert,
   SafeAreaView,
 } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withTiming,
-  Easing,
-} from 'react-native-reanimated';
 import Timer from '../components/Timer';
 import FlowMeter from '../components/FlowMeter';
 import { useStore } from '../store/useStore';
@@ -37,13 +30,6 @@ const FocusScreen: React.FC = () => {
   const { recordInteraction } = useInactivity();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Pulse animation for running indicator
-  const pulse = useSharedValue(1);
-  const pulseStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulse.value }],
-    opacity: pulse.value,
-  }));
-
   // Timer tick
   useEffect(() => {
     if (isRunning) {
@@ -55,19 +41,6 @@ const FocusScreen: React.FC = () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [isRunning, tickTimer]);
-
-  // Pulse when running
-  useEffect(() => {
-    if (isRunning) {
-      pulse.value = withRepeat(
-        withTiming(0.7, { duration: 1200, easing: Easing.inOut(Easing.sine) }),
-        -1,
-        true
-      );
-    } else {
-      pulse.value = withTiming(1, { duration: 300 });
-    }
-  }, [isRunning]);
 
   const totalSeconds =
     timerPhase === 'focus'       ? focusDuration :
@@ -139,9 +112,6 @@ const FocusScreen: React.FC = () => {
 
         {/* Timer */}
         <View style={styles.timerWrapper}>
-          {isRunning && (
-            <Animated.View style={[styles.runningGlow, pulseStyle]} />
-          )}
           <Timer
             seconds={timerSeconds}
             totalSeconds={totalSeconds}
@@ -266,16 +236,6 @@ const styles = StyleSheet.create({
   timerWrapper: {
     alignItems: 'center',
     position: 'relative',
-  },
-  runningGlow: {
-    position: 'absolute',
-    width: 280,
-    height: 280,
-    borderRadius: 140,
-    backgroundColor: '#7B8FF7',
-    opacity: 0.08,
-    top: -10,
-    alignSelf: 'center',
   },
   taskCard: {
     backgroundColor: '#FFFFFF',
