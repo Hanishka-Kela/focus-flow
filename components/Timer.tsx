@@ -47,7 +47,7 @@ const Timer: React.FC<Props> = ({
     const target = 1 - seconds / totalSeconds;
     progress.value = withTiming(target, {
       duration: 800,
-      easing: Easing.out(Easing.cubic),
+      easing: Easing.bezier(0.25, 0.1, 0.25, 1),
     });
   }, [seconds, totalSeconds]);
 
@@ -120,10 +120,6 @@ const Timer: React.FC<Props> = ({
           <Text style={styles.btnPrimaryText}>
             {isRunning ? '⏸' : '▶'}
           </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnSecondary} onPress={() => {}}>
-          <Text style={styles.btnSecondaryIcon}>⏭</Text>
         </TouchableOpacity>
       </View>
     </View>
