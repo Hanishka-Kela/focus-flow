@@ -39,13 +39,6 @@ interface TabBarProps {
 }
 
 function CustomTabBar({ state, descriptors: _d, navigation }: TabBarProps) {
-  const { flowLevel, isRunning } = useStore();
-
-  const flowColor =
-    flowLevel < 33 ? '#FF6B6B' :
-    flowLevel < 66 ? '#FFB703' :
-                     '#06D6A0';
-
   return (
     <View style={tabStyles.container}>
       {state.routes.map((route, index) => {
@@ -68,11 +61,6 @@ function CustomTabBar({ state, descriptors: _d, navigation }: TabBarProps) {
           </TouchableOpacity>
         );
       })}
-
-      {/* Flow indicator dot */}
-      {isRunning && (
-        <View style={[tabStyles.flowDot, { backgroundColor: flowColor }]} />
-      )}
     </View>
   );
 }
@@ -136,15 +124,5 @@ const tabStyles = StyleSheet.create({
   labelActive: {
     color: '#7B8FF7',
     fontWeight: '700',
-  },
-  flowDot: {
-    position: 'absolute',
-    top: 8,
-    right: 28,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
   },
 });
