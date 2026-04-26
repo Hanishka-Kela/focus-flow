@@ -14,6 +14,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
+  Alert,
 } from 'react-native';
 import TaskCard from '../components/TaskCard';
 import { useStore, Priority, Task } from '../store/useStore';
@@ -38,10 +39,18 @@ const TasksScreen: React.FC = () => {
 
   const handleAdd = () => {
     const trimmed = newTitle.trim();
-    if (!trimmed) return;
-    addTask(trimmed, selectedPriority);
-    setNewTitle('');
-    Keyboard.dismiss();
+    if (!trimmed) {
+      Alert.alert('Error', 'Task title cannot be empty');
+      return;
+    }
+    try {
+      addTask(trimmed, selectedPriority);
+      setNewTitle('');
+      Keyboard.dismiss();
+      Alert.alert('Success', `Task "${trimmed}" added!`);
+    } catch (err) {
+      Alert.alert('Error', 'Failed to add task. Please try again.');
+    }
   };
 
   const sorted = sortTasks(tasks);
@@ -107,9 +116,8 @@ const TasksScreen: React.FC = () => {
             ))}
 
             <TouchableOpacity
-              style={[styles.addBtn, !newTitle.trim() && styles.addBtnDisabled]}
+              style={[styles.addBtn]}
               onPress={handleAdd}
-              disabled={!newTitle.trim()}
             >
               <Text style={styles.addBtnText}>+ Add</Text>
             </TouchableOpacity>
